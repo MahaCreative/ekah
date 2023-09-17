@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h3,
+p {
+    font-family: "fira-code";
+}
+.image-item {
+    padding: 5px 0 5px 5px;
+}
