@@ -107,7 +107,10 @@ export default function Home(props) {
                                                         </div>
                                                     )}
                                                     <img
-                                                        src={item.foto}
+                                                        src={
+                                                            "storage/" +
+                                                            item.foto
+                                                        }
                                                         alt=""
                                                         className="w-full h-32 object-cover object-top"
                                                     />
