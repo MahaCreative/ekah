@@ -120,6 +120,7 @@ export default function OwnerLayout({ children }) {
                 </div>
                 {/* Menu */}
                 <Link
+                    href={route("owner.dashboard")}
                     as="div"
                     className="flex items-center  gap-2 rounded-md mt-3 block py-2 active:bg-sky-400/40 text-sm font-fira text-sky-400 font-medium  px-3"
                 >

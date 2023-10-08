@@ -50,6 +50,9 @@ export default function LaporanBulanan({ data }) {
             totalTransaksi += parseInt(data[i].total_penjualan);
         }
     }
+    const cetakHandler = () => {
+        router.get(route("owner.cetak_penjualan_bulanan"), filter);
+    };
     useEffect(() => reload(filter), [filter]);
     return (
         <div>
@@ -77,7 +80,11 @@ export default function LaporanBulanan({ data }) {
                 </h3>
                 <div className="justify-between flex items-center">
                     <div className="flex gap-1">
-                        <ButtosPrimary bg="bg-green-500" value={"Cetak"} />
+                        <ButtosPrimary
+                            onClick={cetakHandler}
+                            bg="bg-green-500"
+                            value={"Cetak"}
+                        />
                         <ButtosPrimary
                             onClick={() => setModals(true)}
                             value={"Filter"}

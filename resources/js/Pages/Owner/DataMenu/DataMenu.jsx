@@ -11,6 +11,9 @@ import ButtonDanger from "@/Components/ButtonDanger";
 import ButtonWarning from "@/Components/ButtonWarning";
 import CurrencyInput from "react-currency-input-field";
 import { router } from "@inertiajs/react";
+import { useCallback } from "react";
+import { debounce } from "@mui/material";
+import { useEffect } from "react";
 
 export default function DataMenu(props) {
     const count = props.count;
@@ -19,7 +22,7 @@ export default function DataMenu(props) {
     const menu = props.menu;
     const [model, setModel] = useState(null);
     const [modalTambah, setModalTambah] = useState(false);
-
+    const [params, setParams] = useState({ search: "", kategori: "" });
     const deleteHandler = (data) => {
         router.delete(route("owner.menu"), { data: data });
     };
@@ -27,6 +30,23 @@ export default function DataMenu(props) {
         setModel(data);
         setModalTambah(true);
     };
+
+    const reload = useCallback(
+        debounce((query) => {
+            router.get(
+                route("owner.menu"),
+                query,
+                { preserveScroll: true, preserveState: true },
+                300
+            );
+        }),
+        []
+    );
+
+    const changeHandler = (e) => {
+        setParams({ ...params, [e.target.name]: e.target.value });
+    };
+    useEffect(() => reload(params), [params]);
 
     return (
         <div className="mt-4">
@@ -83,13 +103,18 @@ export default function DataMenu(props) {
                     value={"Tambah Data Menu"}
                 />
                 <div className="flex items-center gap-2">
-                    <TextInput placeholder={"Search"} />
+                    <TextInput
+                        handleChange={changeHandler}
+                        name="search"
+                        placeholder={"Search"}
+                    />
                     <select
-                        name=""
+                        onChange={changeHandler}
+                        name="kategori"
                         id=""
                         className="text-[8pt] accent-sky-500 border-sky-500 text-sky-500 focus:border-sky-500 focus:ring-sky-500 rounded-md shadow-sm  w-full "
                     >
-                        <option value="Semua Kategori">Semua Kategori</option>
+                        <option value="">Semua Kategori</option>
                         {kategori &&
                             kategori.map((item, key) => (
                                 <option value={item.id} key={key}>

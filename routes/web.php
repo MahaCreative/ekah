@@ -6,6 +6,7 @@ use App\Http\Controllers\Kasir\KasirDashboardController;
 use App\Http\Controllers\Kasir\LihatPesananController;
 use App\Http\Controllers\Kasir\PesanDuluController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Owner\CetakController;
 use App\Http\Controllers\Owner\DashboardController;
 use App\Http\Controllers\Owner\KategoriController;
 use App\Http\Controllers\Owner\LaporanController;
@@ -61,6 +62,11 @@ Route::group(['middleware' => ['role:owner']], function () {
     Route::post('pegawai-create', [Pegawaicontroller::class, 'store'])->name('owner.pegawai_create');
     Route::post('pegawai-update', [Pegawaicontroller::class, 'update'])->name('owner.pegawai_update');
     Route::delete('pegawai', [Pegawaicontroller::class, 'delete']);
+
+
+    Route::get('cetak-laporan-keuangan', [CetakController::class, 'cetak_keuangan'])->name('owner.cetak_keuangan');
+    Route::get('cetak-penjualan-menu-harian', [CetakController::class, 'menuHarian'])->name('owner.cetak_penjualan_harian');
+    Route::get('cetak-penjualan-menu-bulanan', [CetakController::class, 'menubulanan'])->name('owner.cetak_penjualan_bulanan');
 });
 
 // Kasir

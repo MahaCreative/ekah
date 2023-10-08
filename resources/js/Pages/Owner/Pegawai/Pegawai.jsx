@@ -11,6 +11,9 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import ButtonDanger from "@/Components/ButtonDanger";
 import { router } from "@inertiajs/react";
+import { useCallback } from "react";
+import { debounce } from "@mui/material";
+import { useEffect } from "react";
 export default function Pegawai(props) {
     const [modalTambah, setModalTambah] = useState(false);
     const [modalError, setModalError] = useState(false);
@@ -36,6 +39,23 @@ export default function Pegawai(props) {
             },
         });
     };
+
+    const [params, setParams] = useState({ search: "" });
+    const changeHandler = (e) => {
+        setParams({ ...params, [e.target.name]: e.target.value });
+    };
+    const reload = useCallback(
+        debounce((query) => {
+            router.get(
+                route("owner.pegawai"),
+                query,
+                { preserveScroll: true, preserveState: true },
+                300
+            );
+        }),
+        []
+    );
+    useEffect(() => reload(params), [params]);
     return (
         <div className="my-3">
             <Modals
@@ -77,7 +97,11 @@ export default function Pegawai(props) {
                         value={"Tambah Data Pegawai"}
                     />
                     <div className="flex items-center gap-2">
-                        <TextInput name="search" placeholder={"Search"} />
+                        <TextInput
+                            handleChange={changeHandler}
+                            name="search"
+                            placeholder={"Search"}
+                        />
                     </div>
                 </div>
                 <div className="table-container overflow-x-auto  scrollbar-none max-h-[80vh]">

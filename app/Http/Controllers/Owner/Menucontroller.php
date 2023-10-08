@@ -9,15 +9,35 @@ use Illuminate\Http\Request;
 
 class Menucontroller extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
+
+
+        $search = $request->search;
+        $kategoriSearch = $request->kategori;
+
         $count = DataMenu::count();
         $countKategori = Kategori::count();
         $kategori = Kategori::latest()->get();
-        $menu = DataMenu::with('kategori')->latest()->get();
+
+        $menuQuery  = DataMenu::with('kategori')->latest();
+        if (!empty($kategoriSearch)) {
+            $menuQuery->where('kategori_id', '=', $kategoriSearch);
+        }
+        if (!empty($search)) {
+            $menuQuery->where('nama_menu', 'LIKE', '%' . $search . '%');
+        }
+        if (!empty($search)  && $kategoriSearch) {
+            $menuQuery->where('nama_menu', 'LIKE', '%' . $search . '%')
+                ->where('kategori_id', '=', $kategoriSearch);
+        }
+
+        $menu = $menuQuery->get();
         return inertia('Owner/DataMenu/DataMenu', compact('count', 'countKategori', 'kategori', 'menu'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'nama_menu' => 'required|unique:data_menus,nama_menu',
             'kategori_id' => 'required',
@@ -36,7 +56,8 @@ class Menucontroller extends Controller
         ]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         // dd($request->all());
         $menu = DataMenu::findOrFail($request->data['id']);
         $url = $request->file('foto') ? $request->file('foto')->store('menu') : $menu->foto;
@@ -52,7 +73,8 @@ class Menucontroller extends Controller
         return redirect()->back();
     }
 
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
         $menu = DataMenu::findOrFail($request->id);
         $menu->delete();
         return redirect()->back();

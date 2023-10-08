@@ -97,9 +97,6 @@ class LaporanController extends Controller
     public function penjualanBulanan($startDate, $endDate,)
     {
         // Mengambil tanggal akhir bulan ini
-
-
-
         $penjualanBulanan = DB::table('data_menus')
             ->join('detail_pesanans', 'data_menus.id', '=', 'detail_pesanans.data_menu_id')
             ->join('pesanans', 'detail_pesanans.pesanan_id', '=', 'pesanans.id')

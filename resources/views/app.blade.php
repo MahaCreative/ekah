@@ -23,5 +23,6 @@
     </head>
     <body class="font-fira antialiased  bg-gradient-to-tr from-sky-700 via-sky-800 to-sky-900 ">
         @inertia
+        @yield('content')
     </body>
 </html>

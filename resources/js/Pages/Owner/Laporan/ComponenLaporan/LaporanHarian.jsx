@@ -47,16 +47,19 @@ export default function LaporanHarian({ data }) {
             totalTransaksi += parseInt(data[i].total_penjualan);
         }
     }
+    const cetakHandler = () => {
+        router.get(route("owner.cetak_penjualan_harian"), filter);
+    };
     useEffect(() => reload(filter), [filter]);
     return (
         <div>
             <div className="my-3 bg-white rounded-md px-3 py-3">
                 <h3 className="text-sky-400 font-fira text-[8pt]">
-                    Laporan Penjualan Menu Harian
+                    Laporan Penjualan Menu Harian {filter.tanggalHarian}
                 </h3>
                 <div className="justify-between flex items-center">
                     <div className="flex gap-3">
-                        <ButtosPrimary value={"Cetak"} />
+                        <ButtosPrimary onClick={cetakHandler} value={"Cetak"} />
                     </div>
                     <div className="w-[70%] flex gap-3">
                         <TextInput

@@ -10,7 +10,16 @@ class Pegawaicontroller extends Controller
 {
     public function index(Request $request)
     {
-        $user = User::with('roles')->latest()->get();
+        $search = $request->search;
+        $user = [];
+        if ($search === '') {
+            $user = User::with('roles')->latest()->get();
+        } else {
+
+            $user = User::with('roles')
+                ->where('name', 'LIKE', '%' . $search . '%')
+                ->latest()->get();
+        }
         // dd($user);
         return inertia('Owner/Pegawai/Pegawai', compact('user'));
     }

@@ -51,6 +51,9 @@ export default function LaporanPenjualan(props) {
         []
     );
 
+    const cetakHandler = (data) => {
+        router.get(route("owner.cetak_keuangan"), filter);
+    };
     useEffect(() => reload(filter), [filter]);
     return (
         <div className="my-3 text-white">
@@ -113,7 +116,10 @@ export default function LaporanPenjualan(props) {
                             onClick={() => setModalFilter(true)}
                             value={"Filter"}
                         />
-                        <ButtosPrimary value={"Cetak"} />
+                        <ButtosPrimary
+                            onClick={() => cetakHandler(pesanan)}
+                            value={"Cetak"}
+                        />
                     </div>
                     <select
                         name="statusPembayaran"
@@ -126,6 +132,10 @@ export default function LaporanPenjualan(props) {
                     </select>
                 </div>
                 <div className="table-container overflow-x-auto  scrollbar-none max-h-[80vh]">
+                    <p className="text-sky-400">
+                        Laporan Penjualan {filter.tanggalAwal} :{" "}
+                        {filter.tanggalAkhir}
+                    </p>
                     <table className="text-[8pt] font-fira text-gray-700 w-[120vw]">
                         <thead>
                             <tr>
@@ -152,110 +162,98 @@ export default function LaporanPenjualan(props) {
                         <tbody>
                             {pesanan ? (
                                 pesanan.map((item, key) => (
-                                    <>
-                                        <tr
-                                            key={key + 1}
-                                            className={` even:bg-sky-200/60 border-b border-gray-500/50 ${
-                                                key % 2 === 0
-                                                    ? "bg-white"
-                                                    : "bg-gray-100"
-                                            }`}
-                                        >
-                                            <td className=" md:w-[10%] w-[20%] capitalize">
-                                                <p>{item.kd_pesanan}</p>
-                                                <p>
-                                                    Di Buat Oleh:{" "}
-                                                    {item.dibuat_oleh}
-                                                </p>
-                                            </td>
-                                            <td className=" md:w-[10%] w-[20%]">
-                                                {item.tanggal_pesanan}
-                                            </td>
-                                            <td className=" md:w-[10%] w-[20%] ">
-                                                {item.meja.nama_meja}
-                                            </td>
-                                            <td className=" md:w-[10%] w-[20%] ">
-                                                Jumlah Pesanan:{" "}
-                                                {item.total_pesanan}
-                                                <p className="font-bold">
-                                                    <RupiahFormatter
-                                                        amount={
-                                                            item.total_harga
-                                                        }
-                                                    />
-                                                </p>
-                                            </td>
-                                            <td className=" md:w-[10%] w-[20%] ">
-                                                <div className="flex justify-center flex-col items-center">
-                                                    <p>Bayar</p>
-                                                    <div className="flex gap-2 items-center">
-                                                        <div
-                                                            className={`h-2 w-2 rounded-full ${
-                                                                item.status_pembayaran ===
-                                                                "belum selesai"
-                                                                    ? "bg-red-500"
-                                                                    : "bg-green-500"
-                                                            }`}
-                                                        ></div>
-                                                        <p className="hidden md:block font-fira font-extralight text-[6pt] capitalize">
-                                                            {
-                                                                item.status_pembayaran
-                                                            }
-                                                        </p>
-                                                    </div>
-                                                    <p>Pengantaran</p>
+                                    <tr
+                                        key={key + 1}
+                                        className={` even:bg-sky-200/60 border-b border-gray-500/50 ${
+                                            key % 2 === 0
+                                                ? "bg-white"
+                                                : "bg-gray-100"
+                                        }`}
+                                    >
+                                        <td className=" md:w-[10%] w-[20%] capitalize">
+                                            <p>{item.kd_pesanan}</p>
+                                            <p>
+                                                Di Buat Oleh: {item.dibuat_oleh}
+                                            </p>
+                                        </td>
+                                        <td className=" md:w-[10%] w-[20%]">
+                                            {item.tanggal_pesanan}
+                                        </td>
+                                        <td className=" md:w-[10%] w-[20%] ">
+                                            {item.meja.nama_meja}
+                                        </td>
+                                        <td className=" md:w-[10%] w-[20%] ">
+                                            Jumlah Pesanan: {item.total_pesanan}
+                                            <p className="font-bold">
+                                                <RupiahFormatter
+                                                    amount={item.total_harga}
+                                                />
+                                            </p>
+                                        </td>
+                                        <td className=" md:w-[10%] w-[20%] ">
+                                            <div className="flex justify-center flex-col items-center">
+                                                <p>Bayar</p>
+                                                <div className="flex gap-2 items-center">
+                                                    <div
+                                                        className={`h-2 w-2 rounded-full ${
+                                                            item.status_pembayaran ===
+                                                            "belum selesai"
+                                                                ? "bg-red-500"
+                                                                : "bg-green-500"
+                                                        }`}
+                                                    ></div>
+                                                    <p className="hidden md:block font-fira font-extralight text-[6pt] capitalize">
+                                                        {item.status_pembayaran}
+                                                    </p>
                                                 </div>
-                                            </td>
-                                            <td className=" md:w-[10%] w-[20%] text-right">
-                                                <div className="w-full flex items-center justify-center gap-1">
+                                                <p>Pengantaran</p>
+                                            </div>
+                                        </td>
+                                        <td className=" md:w-[10%] w-[20%] text-right">
+                                            <div className="w-full flex items-center justify-center gap-1">
+                                                <ButtosPrimary
+                                                    onClick={() =>
+                                                        lihatHandler(item)
+                                                    }
+                                                    bg="bg-green-500"
+                                                    value={
+                                                        <VisibilityIcon
+                                                            color="inherit"
+                                                            fontSize="inherit"
+                                                        />
+                                                    }
+                                                />
+                                                {item.status_pembayaran ==
+                                                    "selesai" && (
                                                     <ButtosPrimary
                                                         onClick={() =>
-                                                            lihatHandler(item)
+                                                            deleteHandler(item)
                                                         }
-                                                        bg="bg-green-500"
                                                         value={
-                                                            <VisibilityIcon
+                                                            <LocalPrintshopIcon
                                                                 color="inherit"
                                                                 fontSize="inherit"
                                                             />
                                                         }
                                                     />
-                                                    {item.status_pembayaran ==
-                                                        "selesai" && (
-                                                        <ButtosPrimary
-                                                            onClick={() =>
-                                                                deleteHandler(
-                                                                    item
-                                                                )
-                                                            }
-                                                            value={
-                                                                <LocalPrintshopIcon
-                                                                    color="inherit"
-                                                                    fontSize="inherit"
-                                                                />
-                                                            }
-                                                        />
-                                                    )}
-                                                    {item.status_pembayaran !==
-                                                        "selesai" && (
-                                                        <ButtonDanger
-                                                            onClick={() =>
-                                                                deleteHandler(
-                                                                    item
-                                                                )
-                                                            }
-                                                            value={
-                                                                <DeleteForeverIcon
-                                                                    color="inherit"
-                                                                    fontSize="inherit"
-                                                                />
-                                                            }
-                                                        />
-                                                    )}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </>
+                                                )}
+                                                {item.status_pembayaran !==
+                                                    "selesai" && (
+                                                    <ButtonDanger
+                                                        onClick={() =>
+                                                            deleteHandler(item)
+                                                        }
+                                                        value={
+                                                            <DeleteForeverIcon
+                                                                color="inherit"
+                                                                fontSize="inherit"
+                                                            />
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
                                 ))
                             ) : (
                                 <tr>
