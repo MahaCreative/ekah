@@ -18,6 +18,10 @@ use App\Http\Controllers\Pelanggan\HistoryPesananController;
 use App\Http\Controllers\Pelanggan\HomeController;
 use App\Http\Controllers\Pelanggan\PelangganController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Waiters\AntarPesananController;
+use App\Http\Controllers\Waiters\BuatMenuController;
+use App\Http\Controllers\Waiters\DashboardController as WaitersDashboardController;
+use App\Http\Controllers\Waiters\StokMenu;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -71,13 +75,15 @@ Route::group(
         Route::get('kasir-tambah-menu', [KasirController::class, 'add_menu'])->name('kasir.add_menu');
         Route::post('kasir-bayar-pesanan', [KasirController::class, 'bayar'])->name('kasir.bayar');
         Route::get('lihat-pesanan/{id}', [LihatPesananController::class, 'index'])->name('kasir.lihat_pesanan');
-
         Route::get('kasir-daftar-pesanan', [DaftarPesananController::class, 'index'])->name('kasir.daftar_pesanan');
     }
 );
-
-
-
+Route::group(['middleware' => ['role:waiters']], function () {
+    Route::get('waiters-dashboard', [WaitersDashboardController::class, 'index'])->name('waiters.dashboard');
+    Route::post('waiters-buat-menu', [BuatMenuController::class, 'buat_menu'])->name('waiters.buat_menu');
+    Route::post('waiters-antar-pesanan', [AntarPesananController::class, 'antar_pesanan'])->name('waiters.antar_pesanan');
+    Route::post('waiters-stok-menu', [StokMenu::class, 'stok_menu'])->name('waiters.stok_menu');
+});
 
 // Pelanggan
 Route::get('', [HomeController::class, 'index'])->name('pelanggan.index');

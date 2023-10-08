@@ -55,11 +55,12 @@ class PesanDuluController extends Controller
         $kd_pesanan = 'PS' . now()->format('dmy') . '000' . $countPesanan;
         $pesanan = Pesanan::create([
             'kd_pesanan' => $kd_pesanan,
-            'antrian' =>  $cekAntrian->jumlah + 1,
+            'antrian' =>  $cekAntrian->jumlah,
             'total_pesanan' => 0,
             'total_harga' => 0,
             'user_id' => 1,
             'pelanggan_id' => 0,
+            'status_pesanan' => 'selesai memesan',
             'data_meja_id' => $request->id,
             'tanggal_pesanan' => now()->format('Y-m-d'),
         ]);

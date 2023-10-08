@@ -15,7 +15,7 @@ import ButtonDanger from "@/Components/ButtonDanger";
 import ButtosPrimary from "@/Components/ButtosPrimary";
 import Form from "@/Pages/Owner/Pegawai/Form";
 import Modals from "@/Components/Modals";
-export default function KasirLayout({ children }) {
+export default function WaitersLayout({ children }) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [modalTambah, setModalTambah] = useState(false);
     const [model, setModel] = useState(null);
@@ -118,36 +118,6 @@ export default function KasirLayout({ children }) {
                     </div>
                 </div>
                 {/* Menu */}
-                <Link
-                    as="div"
-                    href={route("kasir.dashboard")}
-                    className="flex items-center  gap-2 rounded-md mt-3 block py-2 active:bg-sky-400/40 text-sm font-fira text-sky-400 font-medium  px-3"
-                >
-                    <span>
-                        <WidgetsIcon color="inherit" fontSize="inherit" />
-                    </span>
-                    <p>Dashboard</p>
-                </Link>
-                <Link
-                    as="div"
-                    href={route("kasir.pesan_dulu")}
-                    className="flex items-center  gap-2 rounded-md mt-3 block py-2 active:bg-sky-400/40 text-sm font-fira text-sky-400 font-medium  px-3"
-                >
-                    <span>
-                        <ShoppingCartIcon color="inherit" fontSize="inherit" />
-                    </span>
-                    <p>Pesan Dulu</p>
-                </Link>
-                <Link
-                    as="div"
-                    href={route("kasir.daftar_pesanan")}
-                    className="flex items-center  gap-2 rounded-md mt-3 block py-2 active:bg-sky-400/40 text-sm font-fira text-sky-400 font-medium  px-3"
-                >
-                    <span>
-                        <ListAltIcon color="inherit" fontSize="inherit" />
-                    </span>
-                    <p>Daftar Pesanan</p>
-                </Link>
             </div>
         </div>
     );

@@ -11,6 +11,7 @@ export default function Form({ model, setModel, onClose }) {
         name: "",
         email: "",
         password: "",
+        jenis_akun: "",
         foto: "",
     });
     const changeHandler = (e) => {
@@ -55,6 +56,17 @@ export default function Form({ model, setModel, onClose }) {
                     name="name"
                 />
                 {errors.name && <InputError message={errors.name} />}
+                <InputLabel value={"Jenis Akun"} />
+                <select
+                    onChange={changeHandler}
+                    className="placeholder:text-sky-500 text-[8pt] border-sky-500 text-sky-500 focus:border-sky-500 focus:ring-sky-500 rounded-md shadow-sm block w-full "
+                    name="jenis_akun"
+                    id=""
+                >
+                    <option value="">Pili Jenis Akun</option>
+                    <option value="waiters">Waiters</option>
+                    <option value="kasir">kasir</option>
+                </select>
                 <InputLabel value={"Email"} />
                 <TextInput
                     value={data.email}

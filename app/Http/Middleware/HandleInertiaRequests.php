@@ -117,6 +117,8 @@ class HandleInertiaRequests extends Middleware
         $countSudahBayar = Pesanan::where('tanggal_pesanan', now()->format('Y-m-d'))->where('status_pembayaran', '=', 'selesai')->where('status_pesanan', 'selesai memesan')->count();
         $countBelumBayar = Pesanan::where('tanggal_pesanan', now()->format('Y-m-d'))->where('status_pembayaran', '=', 'belum selesai')->where('status_pesanan', 'selesai memesan')->count();
         $hitungPesanan = Pesanan::where('tanggal_pesanan', now()->format('Y-m-d'))->where('status_pesanan', 'selesai memesan')->count();
+        $totalPenjualan = Pesanan::where('tanggal_pesanan', now()->format('Y-m-d'))->where('status_pesanan', 'selesai memesan')->sum('total_harga');
+
         $jumlahPenghasilan = $this->getTotalBayarPerBulan();
         $jumlahPesanan = $this->getTotalPesanan();
 
@@ -133,6 +135,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'jumlahPenghasilan' => $jumlahPenghasilan,
             'jumlahPesanan' => $jumlahPesanan,
+            'totalPenjualan' => $totalPenjualan,
             'pelanggan' => $pelanggan,
             'menu' => $menu,
             'kategori' => $kategori,

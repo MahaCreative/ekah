@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
         Role::create(['name' => 'owner']);
         Role::create(['name' => 'kasir']);
+        Role::create(['name' => 'waiters']);
         $user->assignRole('owner');
 
         $pesanans = Pesanan::factory(10)->create();

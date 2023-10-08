@@ -44,7 +44,16 @@ class DetailPesananController extends Controller
     public function delete_pesanan(Request $request)
     {
         $detail = DetailPesanan::findOrFail($request->id);
-        $pesanan = Pesanan::findOrFail($detail->pesanan_id);
+        $pesanan = Pesanan::with('detail_pesanan')->findOrFail($detail->pesanan_id);
+        // dd(count($pesanan->detail_pesanan));
+        if (count($pesanan->detail_pesanan) == 1) {
+            $pesanan->update([
+                'status_pesanan' => 'masih melakukan pemesanan',
+            ]);
+            $detail->delete();
+            $pesanan->delete();
+            return redirect()->route('pelanggan.index');
+        }
         $detail->delete();
         $pesanan->updateTotalHarga();
         return redirect()->back();

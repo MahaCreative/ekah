@@ -17,7 +17,7 @@ class HistoryPesananController extends Controller
         $pesanan = Pesanan::with(['detail_pesanan' => function ($query) {
             $query->with('menu');
         }])->where('pelanggan_id', '=', $pelanggan->id)->latest()->get();
-        // dd($pesanan);
+
         // dd($pesanan);
         return inertia('Pelanggan/HistoryPelanggan/HistoryPelanggan', compact('pesanan'));
     }

@@ -17,8 +17,10 @@ class LoginController extends Controller
             // Autentikasi berhasil
             if ($cekUser->roles[0]->name == 'owner') {
                 return redirect()->route('owner.dashboard');
-            } else {
+            } else if ($cekUser->roles[0]->name == 'kasir') {
                 return redirect()->route('kasir.dashboard');
+            } else {
+                return redirect()->route('waiters.dashboard');
             }
         }
 

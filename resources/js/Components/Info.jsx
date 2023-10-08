@@ -8,20 +8,23 @@ import moment from "moment";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import ChartJs from "./ChartJs";
+import RupiahFormatter from "./RupiahFormatter";
 
 export default function Info() {
     const { jumlahPenghasilan } = usePage().props;
+    const { totalPenjualan } = usePage().props;
     const { jumlahPesanan } = usePage().props;
     const { countSudahBayar } = usePage().props;
     const { countBelumBayar } = usePage().props;
     const { hitungPesanan } = usePage().props;
     const { antrian } = usePage().props;
+    console.log(totalPenjualan);
     return (
         <div>
             <div className="grid grid-cols-3 gap-1">
                 <div className="py-1 px-2 flex justify-center items-center bg-gradient-to-br from-green-500 via-green-600 to-green-900 h-20 rounded-md">
                     <div className="flex gap-2 items-center">
-                        <div className="text-4xl md:text-3xl lg:text-6xl">
+                        <div className="text-xl md:text-3xl lg:text-6xl">
                             <CheckCircleIcon
                                 color="inherit"
                                 fontSize="inherit"
@@ -40,7 +43,7 @@ export default function Info() {
                 </div>
                 <div className="py-1 px-2 flex justify-center items-center bg-gradient-to-br from-red-800 via-red-600 to-red-900 h-20 rounded-md">
                     <div className="flex gap-2 items-center">
-                        <div className="text-4xl md:text-3xl lg:text-6xl">
+                        <div className="text-xl md:text-3xl lg:text-6xl">
                             <CancelIcon color="inherit" fontSize="inherit" />
                         </div>
                         <div>
@@ -56,7 +59,7 @@ export default function Info() {
                 </div>
                 <div className="py-1 px-2 flex justify-center items-center bg-gradient-to-br from-pink-500 via-pink-700 to-pink-900 h-20 rounded-md">
                     <div className="flex gap-2 items-center">
-                        <div className="text-4xl md:text-3xl lg:text-6xl">
+                        <div className="text-xl md:text-3xl lg:text-6xl">
                             <ReceiptLongIcon
                                 color="inherit"
                                 fontSize="inherit"
@@ -77,7 +80,7 @@ export default function Info() {
             <div className="grid grid-cols-3 gap-1 my-2 w-full">
                 <div className="col-span-2 py-1 px-2 flex justify-center items-center bg-gradient-to-br from-sky-500 via-sky-600 to-sky-900 h-20 rounded-md">
                     <div className=" flex gap-2 items-center">
-                        <div className="text-4xl md:text-3xl lg:text-6xl">
+                        <div className="text-xl md:text-3xl lg:text-6xl">
                             <PointOfSaleIcon
                                 color="inherit"
                                 fontSize="inherit"
@@ -85,7 +88,7 @@ export default function Info() {
                         </div>
                         <div>
                             <p className="text-2xl md:text-3xl lg:text-5xl">
-                                Rp. 0
+                                <RupiahFormatter amount={totalPenjualan} />
                             </p>
                             <p className="text-[8pt] font-fira">
                                 Total Penjualan
@@ -98,7 +101,7 @@ export default function Info() {
                 </div>
                 <div className="col-span-1 py-1 px-2 flex justify-center items-center bg-gradient-to-br from-orange-500 via-orange-600 to-orange-900 h-20 rounded-md">
                     <div className=" flex gap-2 items-center">
-                        <div className="text-4xl md:text-3xl lg:text-6xl">
+                        <div className="text-xl md:text-3xl lg:text-6xl">
                             <AccessTimeIcon
                                 color="inherit"
                                 fontSize="inherit"

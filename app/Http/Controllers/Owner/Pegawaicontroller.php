@@ -17,10 +17,12 @@ class Pegawaicontroller extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'name' => 'required|min:6',
             'email' => 'required|unique:users,email|email',
             'password' => 'required|min:6',
+            'jenis_akun' => 'required',
             'foto' => 'required|mimes:png,jpg, jpeg',
 
         ]);
@@ -31,7 +33,7 @@ class Pegawaicontroller extends Controller
             'password' => bcrypt($request->password),
             'foto' => $url,
         ]);
-        $user->assignRole('kasir');
+        $user->assignRole($request->jenis_akun);
         return redirect()->back();
     }
     public function update(Request $request)
