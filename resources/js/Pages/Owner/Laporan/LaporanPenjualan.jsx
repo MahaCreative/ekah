@@ -51,7 +51,7 @@ export default function LaporanPenjualan(props) {
         []
     );
 
-    const cetakHandler = (data) => {
+    const cetakHandler = async (data) => {
         window.open(route("owner.cetak_keuangan"), filter);
     };
     useEffect(() => reload(filter), [filter]);

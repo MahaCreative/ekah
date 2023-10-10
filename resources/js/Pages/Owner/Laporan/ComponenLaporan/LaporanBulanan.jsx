@@ -50,7 +50,9 @@ export default function LaporanBulanan({ data }) {
             totalTransaksi += parseInt(data[i].total_penjualan);
         }
     }
-    const cetakHandler = () => {
+    const cetakHandler = async (e) => {
+        e.preventDefault();
+
         window.open(route("owner.cetak_penjualan_bulanan"), filter);
     };
     useEffect(() => reload(filter), [filter]);

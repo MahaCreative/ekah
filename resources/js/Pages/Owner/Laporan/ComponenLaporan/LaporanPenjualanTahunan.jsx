@@ -47,7 +47,8 @@ export default function LaporanPenjualanTahunan({ data }) {
             totalTransaksi += parseInt(data[i].total_penjualan);
         }
     }
-    const cetakHandler = () => {
+    const cetakHandler = async (e) => {
+        e.preventDefault();
         window.open(route("owner.cetak_penjualan_tahunan"), filter);
     };
     useEffect(() => reload(filter), [filter]);
