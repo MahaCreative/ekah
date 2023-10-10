@@ -64,6 +64,7 @@ export default function Form({ model, setModel, onClose }) {
                     id=""
                 >
                     <option value="">Pili Jenis Akun</option>
+                    <option value="owners">owners</option>
                     <option value="waiters">Waiters</option>
                     <option value="kasir">kasir</option>
                 </select>

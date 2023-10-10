@@ -128,7 +128,19 @@ class HandleInertiaRequests extends Middleware
             $countPesanan = Pesanan::where('pelanggan_id', $pelanggan->id)->where('status_pesanan', '=', 'masih melakukan pemesanan')->first();
         }
 
-        $menu = DataMenu::with('kategori')->latest()->get();
+        $menuQuery = DataMenu::with('kategori')->latest();
+        $menuSlider = DataMenu::with('kategori')->latest()->get();
+        if (!empty($request->cari)) {
+            $menuQuery->where('nama_menu', 'like', '%' . $request->cari . '%');
+        }
+        if (!empty($request->kategori)) {
+            $menuQuery->where('kategori_id', $request->kategori);
+        }
+        if (!empty($request->kategori)  && !empty($request->cari)) {
+            $menuQuery->where('nama_menu', 'like', '%' . $request->cari . '%')
+                ->where('kategori_id', $request->kategori);
+        }
+        $menu = $menuQuery->get();
         $meja = DataMeja::latest()->get();
         $kategori = Kategori::latest()->get();
         return [
@@ -138,6 +150,7 @@ class HandleInertiaRequests extends Middleware
             'totalPenjualan' => $totalPenjualan,
             'pelanggan' => $pelanggan,
             'menu' => $menu,
+            'menuSlider' => $menuSlider,
             'kategori' => $kategori,
             'meja' => $meja,
             'count_pesanan' => $countPesanan,

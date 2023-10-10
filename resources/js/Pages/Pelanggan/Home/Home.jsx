@@ -17,9 +17,12 @@ import clsx from "clsx";
 import InputLabel from "@/Components/InputLabel";
 import InputError from "@/Components/InputError";
 import ModalsLogin from "@/Components/ModalsLogin";
+import { useCallback } from "react";
+import { debounce } from "@mui/material";
 
 export default function Home(props) {
     const { menu } = usePage().props;
+    const { menuSlider } = usePage().props;
     const { kategori } = usePage().props;
     const { pelanggan } = usePage().props;
     const { meja } = usePage().props;
@@ -27,7 +30,10 @@ export default function Home(props) {
     const [modalSession, setModalSession] = useState(false);
     const [selectMeja, setSelectMeja] = useState();
     const [modalLogin, setModalLogin] = useState(false);
-
+    const [params, setParams] = useState({
+        cari: "",
+        kategori: "",
+    });
     const pilihMeja = (data) => {
         if (data.status == "kosong") {
             setSelectMeja(data);
@@ -49,6 +55,9 @@ export default function Home(props) {
         setModalSession(false);
     };
 
+    const changeHandler = (e) => {
+        setParams({ ...params, [e.target.name]: e.target.value });
+    };
     useEffect(() => {
         if (pelanggan == null) {
             setModalSession(true);
@@ -57,7 +66,20 @@ export default function Home(props) {
         }
     }, [pelanggan]);
 
+    const reload = useCallback(
+        debounce((query) => {
+            router.get(
+                route("pelanggan.index"),
+                query,
+                { preserveScroll: true, preserveState: true },
+                300
+            );
+        }),
+        []
+    );
+
     useEffect(() => {}, [selectMeja]);
+    useEffect(() => reload(params), [params]);
     return (
         <div className="mt-2 px-4">
             <Modals
@@ -252,7 +274,7 @@ export default function Home(props) {
                     <CorouselImage
                         modalShow={setModalSession}
                         session={pelanggan}
-                        data={menu}
+                        data={menuSlider}
                     />
                 </div>
             </div>
@@ -265,8 +287,13 @@ export default function Home(props) {
                         </h3>
                     </div>
                     <div className="flex gap-2 items-center">
-                        <TextInput name="cari" placeholder="Cari" />
+                        <TextInput
+                            handleChange={changeHandler}
+                            name="cari"
+                            placeholder="Search"
+                        />
                         <select
+                            onChange={changeHandler}
                             className="placeholder:text-sky-500 text-[8pt] border-sky-500 text-sky-500 focus:border-sky-500 focus:ring-sky-500 rounded-md shadow-sm block w-full "
                             name="kategori"
                         >
@@ -280,49 +307,55 @@ export default function Home(props) {
                     </div>
                 </div>
                 <div className="bg-white p-3  rounded-lg grid gap-2 grid-cols-3 max-h-[60vh] overflow-y-auto my-3 scrollbar-none">
-                    {menu.map((item, key) => (
-                        <div
-                            key={key + 1}
-                            className=" relative shadow-md shadow-gray-500/50 rounded-md overflow-hidden"
-                        >
-                            <div>
-                                <img
-                                    className="w-full h-20 object-center object-cover"
-                                    src={"storage/" + item.foto}
-                                />
-                            </div>
-                            <div className="flex justify-between items-end px-2 py-2">
-                                <div className=" text-sky-500 text-[8pt] flex flex-col">
-                                    <div className="flex">
-                                        <p className="capitalize">
-                                            {item.nama_menu}
-                                        </p>
-                                        <p className="absolute top-1 left-2 text-slate-50 text-[8pt] bg-sky-950/50 backdrop-blur-sm px-2 py-1 rounded-md">
-                                            {item.kategori.nama_kategori}
-                                        </p>
-                                        {item.status == "tersedia" ? (
-                                            <div className="absolute top-2 right-2 h-3 w-3 rounded-full bg-green-500 shadow-md shadow-green-500"></div>
-                                        ) : (
-                                            <div className="absolute top-2 right-2 h-3 w-3 rounded-full bg-red-500 shadow-md shadow-red-500"></div>
-                                        )}
-                                    </div>
-                                    <p className="font-semibold text-sky-800 font-mono px-1 py-1 bg-sky-300 inline rounded-md">
-                                        <RupiahFormatter amount={item.harga} />
-                                    </p>
-                                </div>
-                                {item.status == "tersedia" ? (
-                                    <ButtosPrimary
-                                        value={"Pilih"}
-                                        onClick={() => pilihHandler(item)}
+                    {menu.length > 0 ? (
+                        menu.map((item, key) => (
+                            <div
+                                key={key + 1}
+                                className=" relative shadow-md shadow-gray-500/50 rounded-md overflow-hidden"
+                            >
+                                <div>
+                                    <img
+                                        className="w-full h-20 object-center object-cover"
+                                        src={"storage/" + item.foto}
                                     />
-                                ) : (
-                                    <p className="font-semibold text-red-800 text-[8pt] font-mono px-1 py-1 bg-red-300 inline rounded-md">
-                                        Habis
-                                    </p>
-                                )}
+                                </div>
+                                <div className="flex justify-between items-end px-2 py-2">
+                                    <div className=" text-sky-500 text-[8pt] flex flex-col">
+                                        <div className="flex">
+                                            <p className="capitalize">
+                                                {item.nama_menu}
+                                            </p>
+                                            <p className="absolute top-1 left-2 text-slate-50 text-[8pt] bg-sky-950/50 backdrop-blur-sm px-2 py-1 rounded-md">
+                                                {item.kategori.nama_kategori}
+                                            </p>
+                                            {item.status == "tersedia" ? (
+                                                <div className="absolute top-2 right-2 h-3 w-3 rounded-full bg-green-500 shadow-md shadow-green-500"></div>
+                                            ) : (
+                                                <div className="absolute top-2 right-2 h-3 w-3 rounded-full bg-red-500 shadow-md shadow-red-500"></div>
+                                            )}
+                                        </div>
+                                        <p className="font-semibold text-sky-800 font-mono px-1 py-1 bg-sky-300 inline rounded-md">
+                                            <RupiahFormatter
+                                                amount={item.harga}
+                                            />
+                                        </p>
+                                    </div>
+                                    {item.status == "tersedia" ? (
+                                        <ButtosPrimary
+                                            value={"Pilih"}
+                                            onClick={() => pilihHandler(item)}
+                                        />
+                                    ) : (
+                                        <p className="font-semibold text-red-800 text-[8pt] font-mono px-1 py-1 bg-red-300 inline rounded-md">
+                                            Habis
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p>Tidak Ada Menu</p>
+                    )}
                 </div>
             </div>
         </div>

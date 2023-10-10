@@ -92,6 +92,7 @@ Route::group(['middleware' => ['role:waiters']], function () {
     Route::post('waiters-stok-menu', [StokMenu::class, 'stok_menu'])->name('waiters.stok_menu');
 });
 
+
 // Pelanggan
 Route::get('', [HomeController::class, 'index'])->name('pelanggan.index');
 Route::post('create-session-pelanggan', [PelangganController::class, 'create_session'])->name('pelanggan.create_session');
