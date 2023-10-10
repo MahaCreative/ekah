@@ -52,7 +52,7 @@ export default function LaporanPenjualan(props) {
     );
 
     const cetakHandler = (data) => {
-        router.get(route("owner.cetak_keuangan"), filter);
+        window.open(route("owner.cetak_keuangan"), filter);
     };
     useEffect(() => reload(filter), [filter]);
     return (

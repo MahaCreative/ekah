@@ -48,7 +48,7 @@ export default function LaporanHarian({ data }) {
         }
     }
     const cetakHandler = () => {
-        router.get(route("owner.cetak_penjualan_harian"), filter);
+        window.open(route("owner.cetak_penjualan_harian"), filter);
     };
     useEffect(() => reload(filter), [filter]);
     return (

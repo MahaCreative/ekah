@@ -98,7 +98,7 @@ export default function Dashboard(props) {
                 )}
             </Modals>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
                 <div className="w-full rounded-lg shadow-md shadow-gray-400/50 bg-white my-3 overflow-hidden">
                     <h3 className="text-sky-500 mx-3 my-2">Daftar Pesanan</h3>
                     {pesanan.length > 0 ? (

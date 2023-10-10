@@ -47,6 +47,9 @@ export default function LaporanPenjualanTahunan({ data }) {
             totalTransaksi += parseInt(data[i].total_penjualan);
         }
     }
+    const cetakHandler = () => {
+        window.open(route("owner.cetak_penjualan_tahunan"), filter);
+    };
     useEffect(() => reload(filter), [filter]);
     return (
         <div>
@@ -56,7 +59,7 @@ export default function LaporanPenjualanTahunan({ data }) {
                 </h3>
                 <div className="justify-between flex items-center">
                     <div className="flex gap-3">
-                        <ButtosPrimary value={"Cetak"} />
+                        <ButtosPrimary onClick={cetakHandler} value={"Cetak"} />
                     </div>
                     <div className="w-1/2 flex gap-2">
                         <TextInput

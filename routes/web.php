@@ -67,6 +67,7 @@ Route::group(['middleware' => ['role:owner']], function () {
     Route::get('cetak-laporan-keuangan', [CetakController::class, 'cetak_keuangan'])->name('owner.cetak_keuangan');
     Route::get('cetak-penjualan-menu-harian', [CetakController::class, 'menuHarian'])->name('owner.cetak_penjualan_harian');
     Route::get('cetak-penjualan-menu-bulanan', [CetakController::class, 'menubulanan'])->name('owner.cetak_penjualan_bulanan');
+    Route::get('cetak-penjualan-menu-tahunan', [CetakController::class, 'menutahunan'])->name('owner.cetak_penjualan_tahunan');
 });
 
 // Kasir

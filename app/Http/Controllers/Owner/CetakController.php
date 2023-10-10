@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
@@ -36,10 +37,16 @@ class CetakController extends Controller
             'totalTransaksi' => $totalTransaksi,
             'pesanan' => $pesanan
         ]);
-        $pdf->save(storage_path('app/public/PDF/LaporanPenjualan.pdf'));
-        $headers = ['Content-Type: application/pdf'];
-        return response()->download(public_path('storage/PDF/LaporanPenjualan.pdf'));
-        // return response()->json(['pdfUrl' => asset('storage/my_pdf.pdf')]);
+        $pdfPath = 'PDF/LaporanPenjualan.pdf';
+        \Storage::put($pdfPath, $pdf->output());
+        $path = public_path("storage/" . $pdfPath);
+        if (file_exists($path)) {
+            $headers = ['Content-Type: application/pdf'];
+            // dd($path);
+            return response()->download($path, 'LaporanPenjualan.pdf', $headers);
+        } else {
+            abort(404, 'File not found');
+        }
     }
 
     public function menuHarian(Request $request)
@@ -82,9 +89,17 @@ class CetakController extends Controller
             'totalTransaksi' => $totalTransaksi,
             'totalPesanan ' => $totalPesanan
         ]);
-        $pdf->save(storage_path('app/public/PDF/LaporanPenjualanHarian.pdf'));
-        $headers = ['Content-Type: application/pdf'];
-        return response()->download(public_path('storage/PDF/LaporanPenjualanHarian.pdf'));
+
+        $pdfPath = 'PDF/LaporanPenjualanHarian.pdf';
+        \Storage::put($pdfPath, $pdf->output());
+        $path = public_path("storage/" . $pdfPath);
+        if (file_exists($path)) {
+            $headers = ['Content-Type: application/pdf'];
+            // dd($path);
+            return response()->download($path, 'LaporanPenjualanHarian.pdf', $headers);
+        } else {
+            abort(404, 'File not found');
+        }
     }
 
     public function menubulanan(Request $request)
@@ -128,5 +143,57 @@ class CetakController extends Controller
         $pdf->save(storage_path('app/public/PDF/LaporanPenjualanBulanan.pdf'));
         $headers = ['Content-Type: application/pdf'];
         return response()->download(public_path('storage/PDF/LaporanPenjualanBulanan.pdf'));
+    }
+
+    public function menutahunan(Request $request)
+    {
+        $year = $request->year ? $request->year : Carbon::now()->year;
+        $search_tahun = $request->search_tahun;
+        $tahun = DB::table('data_menus')
+            ->join('detail_pesanans', 'data_menus.id', '=', 'detail_pesanans.data_menu_id')
+            ->join('pesanans', 'detail_pesanans.pesanan_id', '=', 'pesanans.id')
+            ->whereYear('pesanans.tanggal_pesanan', $year) // Memfilter berdasarkan tahun yang Anda inginkan
+            ->where('data_menus.nama_menu', 'like', '%' . $search_tahun . '%')
+            ->select(
+                DB::raw('YEAR(pesanans.tanggal_pesanan) as tahun'),
+                DB::raw('MONTH(pesanans.tanggal_pesanan) as bulan'),
+                'data_menus.nama_menu',
+                DB::raw('SUM(detail_pesanans.jumlah_pesanan) as total_pesanan'),
+                DB::raw('SUM(detail_pesanans.total_harga) as total_penjualan')
+            )
+            ->groupBy('tahun', 'bulan', 'data_menus.nama_menu')
+            ->orderBy('tahun', 'asc')
+            ->orderBy('bulan', 'asc')
+            ->get();
+
+        $totalPesanan = 0;
+        $totalTransaksi = 0;
+
+        if (
+            $tahun && count($tahun) > 0
+        ) {
+            foreach ($tahun as $item) {
+                $totalPesanan += intval($item->total_pesanan);
+
+                // Tambahkan nilai total_penjualan dari setiap item ke totalTransaksi
+                $totalTransaksi += intval($item->total_penjualan);
+            }
+        }
+
+        $pdf = PDF::loadView('PDF.LaporanPenjualanTahunan', [
+            'data' => $tahun,
+
+        ]);
+
+        $pdfPath = 'PDF/LaporanPenjualanTahunan.pdf';
+        \Storage::put($pdfPath, $pdf->output());
+        $path = public_path("storage/" . $pdfPath);
+        if (file_exists($path)) {
+            $headers = ['Content-Type: application/pdf'];
+            // dd($path);
+            return response()->download($path, 'LaporanPenjualanTahunan.pdf', $headers);
+        } else {
+            abort(404, 'File not found');
+        }
     }
 }

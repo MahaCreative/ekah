@@ -51,7 +51,7 @@ export default function LaporanBulanan({ data }) {
         }
     }
     const cetakHandler = () => {
-        router.get(route("owner.cetak_penjualan_bulanan"), filter);
+        window.open(route("owner.cetak_penjualan_bulanan"), filter);
     };
     useEffect(() => reload(filter), [filter]);
     return (
